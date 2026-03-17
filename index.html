@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Sudoku</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0D0D12;--surface:#1A1A24;--surface2:#22222E;--border:#2A2A3A;--blue:#6B8CFF;--blue-dim:rgba(107,140,255,0.15);--red:#E84747;--red-dim:rgba(232,71,71,0.15);--green:#4CAF50;--text:#E8E8F0;--text-dim:#7A7A9A;--text-muted:#3A3A5A;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;overflow:hidden;}html,body{height:100%;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;overflow:hidden;padding-top:env(safe-area-inset-top);}html,body{height:100%;}
 .screen{display:none;width:100vw;min-height:100vh;height:100%;flex-direction:column;align-items:center;justify-content:flex-start;}
 .screen.active{display:flex;}
 /* MENU */
@@ -54,7 +54,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-
 .btn-primary{width:100%;padding:16px;background:var(--blue);border:none;border-radius:12px;color:#0D0D12;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity .15s;margin-top:auto;}
 .btn-primary:hover{opacity:.88;}
 /* GAME */
-#game{padding:0 16px 16px;gap:8px;max-width:480px;width:100%;}
+#game{padding:env(safe-area-inset-top,0px) 16px 16px;gap:8px;max-width:480px;width:100%;}
 .game-header{display:flex;align-items:center;justify-content:space-between;width:100%;height:44px;position:relative;}
 .game-title{font-size:18px;font-weight:700;letter-spacing:4px;color:var(--text);position:absolute;left:50%;transform:translateX(-50%);}
 .icon-btn{width:36px;height:36px;background:var(--surface);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;position:relative;z-index:1;}
