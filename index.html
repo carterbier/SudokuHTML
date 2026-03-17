@@ -172,17 +172,17 @@ canvas#board{width:100%;height:100%;cursor:pointer;touch-action:none;display:blo
       <div style="flex:1;height:1px;background:var(--border)"></div>
     </div>
     <!-- Generate Code -->
-    <div style="background:var(--surface);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;">
-      <div>
-        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px">Generate a Code</div>
-        <div style="font-size:11px;color:var(--text-dim)">Select difficulty, then share the code</div>
+    <div id="generateSection">
+      <div id="generateBtn" style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 24px;text-align:center;cursor:pointer;font-size:15px;font-weight:500;color:var(--text);" onclick="expandGenerate()">Generate a Code</div>
+      <div id="generateExpanded" style="display:none;background:var(--surface);border-radius:14px;padding:16px;display:none;flex-direction:column;gap:10px;">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">Generate a Code</div>
+        <div class="diff-row" id="lobbyDiffRow"></div>
+        <div class="seed-box" id="lobbyCodeBox">
+          <div><div class="seed-label">GAME CODE</div><div class="seed-value" id="lobbyCodeVal">------</div></div>
+          <button class="copy-btn" onclick="copyCode('lobbyCodeVal')">Copy</button>
+        </div>
+        <button class="btn-primary" style="margin-top:0;padding:13px" onclick="lobbyStartNew()">Start Game</button>
       </div>
-      <div class="diff-row" id="lobbyDiffRow"></div>
-      <div class="seed-box" id="lobbyCodeBox">
-        <div><div class="seed-label">GAME CODE</div><div class="seed-value" id="lobbyCodeVal">------</div></div>
-        <button class="copy-btn" onclick="copyCode('lobbyCodeVal')">Copy</button>
-      </div>
-      <button class="btn-primary" style="margin-top:0;padding:13px" onclick="lobbyStartNew()">Start Game</button>
     </div>
   </div>
 </div>
@@ -246,18 +246,17 @@ canvas#board{width:100%;height:100%;cursor:pointer;touch-action:none;display:blo
     <div id="victoryHints" style="color:var(--text-dim);font-size:12px;display:none"></div>
     <div class="badge-box" id="victoryBadge" style="display:none"></div>
     <hr>
-    <div id="challengeSection" style="width:100%">
-      <button id="challengeBtn" style="width:100%;padding:10px;background:rgba(107,140,255,0.12);border:1px solid rgba(107,140,255,0.3);border-radius:10px;color:var(--blue);font-family:Outfit,sans-serif;font-size:13px;font-weight:600;cursor:pointer;" onclick="showChallengeCode()">Challenge a Friend</button>
-      <div id="challengeCodeBox" style="display:none;margin-top:8px">
-        <div class="seed-box"><div><div class="seed-label">GAME CODE</div><div class="seed-value" id="victorySeed">000000</div></div><button class="copy-btn" onclick="copyCode('victorySeed')">Copy</button></div>
-        <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:6px;line-height:1.5">Difficulty is locked to this code</div>
-      </div>
-    </div>
     <hr>
     <div class="quote-card" id="victoryQuote"></div>
     <div class="modal-btns">
       <button class="btn-sec" onclick="goToMenu()">Menu</button>
       <button class="btn-pri" onclick="startGame(state.difficulty)">New Puzzle</button>
+    </div>
+    <div id="challengeSection" style="width:100%">
+      <button id="challengeBtn" style="width:100%;padding:11px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text-dim);font-family:Outfit,sans-serif;font-size:13px;font-weight:500;cursor:pointer;" onclick="showChallengeCode()">Challenge a Friend</button>
+      <div id="challengeCodeBox" style="display:none;margin-top:8px">
+        <div class="seed-box"><div><div class="seed-label">GAME CODE</div><div class="seed-value" id="victorySeed">000000</div></div><button class="copy-btn" onclick="copyCode('victorySeed')">Copy</button></div>
+      </div>
     </div>
   </div>
 </div>
@@ -356,6 +355,12 @@ function generateCode(diff) {
   return DIFF_PREFIX[diff] * 100000 + seed;
 }
 
+function expandGenerate() {
+  document.getElementById('generateBtn').style.display = 'none';
+  const exp = document.getElementById('generateExpanded');
+  exp.style.display = 'flex';
+}
+
 function showLobby() {
   lobbyDifficulty = 'medium';
   lobbyCode = generateCode('medium');
@@ -363,6 +368,9 @@ function showLobby() {
   document.getElementById('lobbyCodeVal').textContent = lobbyCode;
   document.getElementById('codeInput').value = '';
   document.getElementById('codeError').style.display = 'none';
+  // Reset generate section to collapsed
+  document.getElementById('generateBtn').style.display = '';
+  document.getElementById('generateExpanded').style.display = 'none';
   showScreen('lobby');
 }
 
