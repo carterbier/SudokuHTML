@@ -134,27 +134,57 @@ canvas#board{width:100%;height:100%;cursor:pointer;touch-action:none;display:blo
     <button class="diff-card hard"   onclick="startGame('hard')">Hard</button>
   </div>
   <div class="menu-bottom">
-    <button class="menu-btn friend" onclick="showLobby()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="color:var(--blue)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      Play with Friend
-    </button>
     <button class="menu-btn" onclick="showLeaderboard()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
       Best Times
+    </button>
+    <button class="menu-btn friend" onclick="showLobby()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="color:var(--blue)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Play with Friend
     </button>
   </div>
 </div>
 
 <!-- FRIEND LOBBY -->
-<div id="lobby" class="screen">
-  <div class="lobby-header">
-    <button class="back-btn" onclick="showScreen('menu')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#7A7A9A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <span class="lobby-title">PLAY WITH FRIEND</span>
-    <div style="width:36px"></div>
+<div id="lobby" class="screen" style="justify-content:flex-start;overflow-y:auto;">
+  <div style="width:100%;max-width:480px;padding:24px 32px;display:flex;flex-direction:column;gap:16px;">
+    <div class="lobby-header">
+      <button class="back-btn" onclick="showScreen('menu')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7A7A9A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="lobby-title">PLAY WITH FRIEND</span>
+      <div style="width:36px"></div>
+    </div>
+    <!-- Enter Code -->
+    <div style="background:var(--surface);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px">Enter a Code</div>
+        <div style="font-size:11px;color:var(--text-dim)">Difficulty is set by the code</div>
+      </div>
+      <input class="code-input" id="codeInput" type="number" placeholder="000000" oninput="this.value=this.value.slice(0,6)" />
+      <div id="codeError" class="error-text" style="display:none"></div>
+      <button class="btn-primary" style="margin-top:0;padding:13px" onclick="lobbyEnterCode()">Play</button>
+    </div>
+    <!-- OR divider -->
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+      <span style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;letter-spacing:2px">OR</span>
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+    </div>
+    <!-- Generate Code -->
+    <div style="background:var(--surface);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px">Generate a Code</div>
+        <div style="font-size:11px;color:var(--text-dim)">Select difficulty, then share the code</div>
+      </div>
+      <div class="diff-row" id="lobbyDiffRow"></div>
+      <div class="seed-box" id="lobbyCodeBox">
+        <div><div class="seed-label">GAME CODE</div><div class="seed-value" id="lobbyCodeVal">------</div></div>
+        <button class="copy-btn" onclick="copyCode('lobbyCodeVal')">Copy</button>
+      </div>
+      <button class="btn-primary" style="margin-top:0;padding:13px" onclick="lobbyStartNew()">Start Game</button>
+    </div>
   </div>
-  <div id="lobbyContent" style="width:100%;display:flex;flex-direction:column;gap:12px;flex:1;"></div>
 </div>
 
 <!-- GAME -->
@@ -216,13 +246,12 @@ canvas#board{width:100%;height:100%;cursor:pointer;touch-action:none;display:blo
     <div id="victoryHints" style="color:var(--text-dim);font-size:12px;display:none"></div>
     <div class="badge-box" id="victoryBadge" style="display:none"></div>
     <hr>
-    <div class="share-section">
-      <div class="share-label">CHALLENGE A FRIEND</div>
-      <div class="seed-box" id="victorySeedBox" style="width:100%">
-        <div><div class="seed-label">GAME CODE</div><div class="seed-value" id="victorySeed">000000</div></div>
-        <button class="copy-btn" onclick="copyCode('victorySeed')">Copy</button>
+    <div id="challengeSection" style="width:100%">
+      <button id="challengeBtn" style="width:100%;padding:10px;background:rgba(107,140,255,0.12);border:1px solid rgba(107,140,255,0.3);border-radius:10px;color:var(--blue);font-family:Outfit,sans-serif;font-size:13px;font-weight:600;cursor:pointer;" onclick="showChallengeCode()">Challenge a Friend</button>
+      <div id="challengeCodeBox" style="display:none;margin-top:8px">
+        <div class="seed-box"><div><div class="seed-label">GAME CODE</div><div class="seed-value" id="victorySeed">000000</div></div><button class="copy-btn" onclick="copyCode('victorySeed')">Copy</button></div>
+        <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:6px;line-height:1.5">Difficulty is locked to this code</div>
       </div>
-      <div style="font-size:10px;color:var(--text-muted);text-align:center;line-height:1.5">Share this code so your friend can play the same puzzle</div>
     </div>
     <hr>
     <div class="quote-card" id="victoryQuote"></div>
@@ -275,9 +304,17 @@ function isValid(grid,row,col,num){for(let i=0;i<9;i++){if(grid[row][i]===num||g
 function solveFull(grid,rng){for(let r=0;r<9;r++)for(let c=0;c<9;c++)if(grid[r][c]===0){const nums=rng.shuffle([1,2,3,4,5,6,7,8,9]);for(const n of nums){if(isValid(grid,r,c,n)){grid[r][c]=n;if(solveFull(grid,rng))return true;grid[r][c]=0;}}return false;}return true;}
 function countSolutions(grid,count=0){if(count>=2)return count;for(let r=0;r<9;r++)for(let c=0;c<9;c++)if(grid[r][c]===0){let total=count;for(let n=1;n<=9;n++)if(isValid(grid,r,c,n)){grid[r][c]=n;total=countSolutions(grid,total);grid[r][c]=0;if(total>=2)return total;}return total;}return count+1;}
 
-function generatePuzzle(difficulty, seed) {
+function generatePuzzle(difficulty, code) {
+  // If code provided, decode difficulty from it; otherwise generate fresh code
+  if (code) {
+    const decoded = diffFromCode(code);
+    if (decoded) difficulty = decoded;
+  } else {
+    const seed = 10000 + Math.floor(Math.random()*90000);
+    code = DIFF_PREFIX[difficulty] * 100000 + seed;
+  }
   const clues={easy:38,medium:30,hard:24}[difficulty];
-  if (!seed) seed = 100000 + Math.floor(Math.random() * 900000);
+  const seed = code % 100000;
   const rng = new SeededRandom(seed);
   const solution=Array.from({length:9},()=>Array(9).fill(0));
   solveFull(solution,rng);
@@ -291,7 +328,7 @@ function generatePuzzle(difficulty, seed) {
     if(countSolutions(puzzle.map(row=>[...row]))===1)removed++;
     else puzzle[r][c]=backup;
   }
-  return{puzzle,solution,seed};
+  return{puzzle,solution,code};
 }
 
 // ── STATE ─────────────────────────────────────────────────────────────
@@ -308,65 +345,59 @@ function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classL
 function goToMenu(){clearInterval(timerInterval);document.querySelectorAll('.modal-backdrop').forEach(m=>m.classList.remove('visible'));showScreen('menu');}
 
 // ── LOBBY ─────────────────────────────────────────────────────────────
-let lobbyState = { mode: null, seed: 0, difficulty: 'medium', enteredCode: '' };
+const DIFF_PREFIX = { easy: 1, medium: 2, hard: 3 };
+const PREFIX_DIFF = { 1: 'easy', 2: 'medium', 3: 'hard' };
+let lobbyDifficulty = 'medium';
+let lobbyCode = 0;
+
+function diffFromCode(code) { return PREFIX_DIFF[Math.floor(code/100000)] || null; }
+function generateCode(diff) {
+  const seed = 10000 + Math.floor(Math.random()*90000);
+  return DIFF_PREFIX[diff] * 100000 + seed;
+}
 
 function showLobby() {
-  lobbyState = { mode: null, seed: 100000+Math.floor(Math.random()*900000), difficulty: 'medium', enteredCode: '' };
-  renderLobby();
+  lobbyDifficulty = 'medium';
+  lobbyCode = generateCode('medium');
+  renderLobbyDiffs();
+  document.getElementById('lobbyCodeVal').textContent = lobbyCode;
+  document.getElementById('codeInput').value = '';
+  document.getElementById('codeError').style.display = 'none';
   showScreen('lobby');
 }
 
-function renderLobby() {
-  const el = document.getElementById('lobbyContent');
-  if (lobbyState.mode === null) {
-    el.innerHTML = `
-      <p style="color:var(--text-dim);font-size:13px;text-align:center">How do you want to play?</p>
-      <div class="lobby-card" onclick="lobbyMode('new')">
-        <h3>Start New Game</h3>
-        <p>Generate a code to share with a friend</p>
-      </div>
-      <div class="lobby-card" onclick="lobbyMode('enter')" style="border-color:var(--border)">
-        <h3>Enter a Code</h3>
-        <p>Play the same puzzle as your friend</p>
-      </div>`;
-  } else if (lobbyState.mode === 'new') {
-    el.innerHTML = `
-      <p style="color:var(--text-dim);font-size:13px;text-align:center">Share this code with your friend</p>
-      <div class="seed-box">
-        <div><div class="seed-label">GAME CODE</div><div class="seed-value" id="lobbySeed">${lobbyState.seed}</div></div>
-        <button class="copy-btn" onclick="copyCode('lobbySeed')">Copy</button>
-      </div>
-      <div class="section-label">SELECT DIFFICULTY</div>
-      <div class="diff-row">
-        ${['easy','medium','hard'].map(d=>`<button class="diff-pill ${lobbyState.difficulty===d?'active':''}" onclick="lobbyDiff('${d}')">${d.charAt(0).toUpperCase()+d.slice(1)}</button>`).join('')}
-      </div>
-      <p style="font-size:10px;color:var(--text-muted);text-align:center;line-height:1.5">Your friend should enter this code and select the same difficulty</p>
-      <button class="btn-primary" onclick="lobbyStartNew()">Start Game</button>`;
-  } else if (lobbyState.mode === 'enter') {
-    el.innerHTML = `
-      <p style="color:var(--text-dim);font-size:13px;text-align:center">Enter your friend's code</p>
-      <div class="section-label">SELECT DIFFICULTY</div>
-      <div class="diff-row">
-        ${['easy','medium','hard'].map(d=>`<button class="diff-pill ${lobbyState.difficulty===d?'active':''}" onclick="lobbyDiff('${d}')">${d.charAt(0).toUpperCase()+d.slice(1)}</button>`).join('')}
-      </div>
-      <input class="code-input" id="codeInput" type="number" placeholder="000000" maxlength="6" value="${lobbyState.enteredCode}" oninput="lobbyState.enteredCode=this.value.slice(0,6)" />
-      <div id="codeError" class="error-text" style="display:none"></div>
-      <button class="btn-primary" onclick="lobbyEnterCode()">Play</button>`;
-  }
+function renderLobbyDiffs() {
+  const row = document.getElementById('lobbyDiffRow');
+  if (!row) return;
+  row.innerHTML = ['easy','medium','hard'].map(d =>
+    `<button class="diff-pill ${lobbyDifficulty===d?'active':''}" onclick="lobbySetDiff('${d}')">${d.charAt(0).toUpperCase()+d.slice(1)}</button>`
+  ).join('');
 }
 
-function lobbyMode(m) { lobbyState.mode = m; renderLobby(); }
-function lobbyDiff(d) { lobbyState.difficulty = d; renderLobby(); }
-function lobbyStartNew() { startGame(lobbyState.difficulty, lobbyState.seed); }
+function lobbySetDiff(d) {
+  lobbyDifficulty = d;
+  lobbyCode = generateCode(d);
+  document.getElementById('lobbyCodeVal').textContent = lobbyCode;
+  renderLobbyDiffs();
+}
+
+function lobbyStartNew() { startGame(lobbyDifficulty, lobbyCode); }
+
 function lobbyEnterCode() {
-  const code = document.getElementById('codeInput').value;
-  const seed = parseInt(code);
+  const val = document.getElementById('codeInput').value;
+  const code = parseInt(val);
   const errEl = document.getElementById('codeError');
-  if (!code || code.length !== 6 || isNaN(seed) || seed < 100000 || seed > 999999) {
-    errEl.textContent = 'Please enter a valid 6-digit code'; errEl.style.display = '';
-    document.getElementById('codeInput').classList.add('error'); return;
+  const inputEl = document.getElementById('codeInput');
+  if (!val || val.length !== 6 || isNaN(code)) {
+    errEl.textContent = 'Please enter a valid 6-digit code'; errEl.style.display = ''; inputEl.classList.add('error'); return;
   }
-  startGame(lobbyState.difficulty, seed);
+  const diff = diffFromCode(code);
+  if (!diff) {
+    errEl.textContent = 'Invalid code — first digit must be 1 (Easy), 2 (Medium), or 3 (Hard)';
+    errEl.style.display = ''; inputEl.classList.add('error'); return;
+  }
+  errEl.style.display = 'none'; inputEl.classList.remove('error');
+  startGame(diff, code);
 }
 
 // ── GAME START ────────────────────────────────────────────────────────
@@ -421,6 +452,12 @@ function togglePause(){if(state.isComplete||state.isGameOver||!state.board)retur
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&!state.isPaused&&!state.isComplete&&!state.isGameOver&&state.board)togglePause();});
 function checkComplete(){for(let r=0;r<9;r++)for(let c=0;c<9;c++)if(state.board[r][c]!==state.solution[r][c])return false;return true;}
 
+function showChallengeCode() {
+  document.getElementById('challengeBtn').style.display='none';
+  document.getElementById('challengeCodeBox').style.display='block';
+  document.getElementById('victorySeed').textContent=state.seed;
+}
+
 function triggerVictory(){
   state.isComplete=true;clearInterval(timerInterval);
   const counts=state.hintsUsed<=MAX_HINTS;let rank=null;
@@ -432,7 +469,9 @@ function triggerVictory(){
   if(!counts){badge.className='badge-box bad';badge.textContent='⚠ Too many hints — time not recorded';badge.style.display='';}
   else if(rank!==null&&rank>=0){badge.className='badge-box good';badge.textContent=['🥇 New Best Time!','🥈 2nd Best Time!','🥉 3rd Best Time!'][rank]||`Top ${rank+1}`;badge.style.display='';}
   else badge.style.display='none';
-  document.getElementById('victorySeed').textContent=state.seed;
+  // Reset challenge section
+  document.getElementById('challengeBtn').style.display='';
+  document.getElementById('challengeCodeBox').style.display='none';
   setQuote('victoryQuote');
   document.getElementById('victoryModal').classList.add('visible');
 }
