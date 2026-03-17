@@ -8,11 +8,11 @@
 <style>
 :root{--bg:#0D0D12;--surface:#1A1A24;--surface2:#22222E;--border:#2A2A3A;--blue:#6B8CFF;--blue-dim:rgba(107,140,255,0.15);--red:#E84747;--red-dim:rgba(232,71,71,0.15);--green:#4CAF50;--text:#E8E8F0;--text-dim:#7A7A9A;--text-muted:#3A3A5A;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.screen{display:none;width:100vw;height:100vh;flex-direction:column;align-items:center;justify-content:center;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}html,body{height:100%;}
+.screen{display:none;width:100vw;min-height:100vh;height:100%;flex-direction:column;align-items:center;justify-content:center;}
 .screen.active{display:flex;}
 /* MENU */
-#menu{gap:0;padding:40px 32px;justify-content:space-between;max-width:480px;margin:0 auto;}
+#menu{gap:24px;padding:48px 32px 32px;justify-content:center;max-width:480px;margin:0 auto;overflow-y:auto;}
 .menu-logo{text-align:center;}
 .menu-logo h1{font-size:clamp(42px,10vw,64px);font-weight:900;letter-spacing:12px;color:var(--text);line-height:1;}
 .menu-logo .divider{width:48px;height:3px;background:var(--blue);border-radius:2px;margin:12px auto 0;}
@@ -121,6 +121,17 @@ canvas#board{width:100%;height:100%;cursor:pointer;touch-action:none;display:blo
 .share-section{width:100%;display:flex;flex-direction:column;gap:8px;align-items:center;}
 .share-label{font-size:9px;color:var(--text-dim);letter-spacing:2px;font-family:'DM Mono',monospace;}
 @media(max-width:400px){#game{padding:8px 10px;gap:6px;}.board-wrap{max-height:42vh;}}
+
+@media(max-height:700px){
+  #menu{padding:24px 32px 24px;gap:16px;}
+  .menu-logo h1{font-size:36px;}
+  .diff-card{padding:14px 24px;}
+  .menu-btn{padding:11px;}
+}
+@media(max-height:600px){
+  #menu{padding:16px 32px;gap:12px;}
+  .menu-logo h1{font-size:30px;}
+}
 </style>
 </head>
 <body>
